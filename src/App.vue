@@ -1,5 +1,4 @@
 <template>
-  <h1>APP</h1>
   <RouterView />
 </template>
 
@@ -9,3 +8,21 @@ export default {
   components: {},
 }
 </script>
+
+<style lang="scss">
+body {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
