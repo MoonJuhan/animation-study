@@ -42,7 +42,7 @@ export default {
         route: 'animejs',
         githubUrl: 'juliangarnier/anime',
         npmUrl: 'animejs',
-        logoUrl: null,
+        logoUrl: 'animejs.jpeg',
         star: 0,
         downloads: 0,
       },
@@ -51,7 +51,7 @@ export default {
         route: 'gsap',
         githubUrl: 'greensock/GSAP',
         npmUrl: 'gsap',
-        logoUrl: null,
+        logoUrl: 'gsap.svg',
         star: 0,
         downloads: 0,
       },
@@ -147,7 +147,7 @@ export default {
       align-items: center;
 
       .logo {
-        width: 20px;
+        height: 22px;
         margin: 0 8px 0 0;
       }
     }
