@@ -19,6 +19,10 @@ const routesBasic = [
     path: '/mojs',
     component: () => import(/* webpackChunkName: 'view-mojs' */ '../components/views/ViewMojs.vue'),
   },
+  {
+    path: '/mobile',
+    component: () => import(/* webpackChunkName: 'view-mobile' */ '../components/views/ViewMobile.vue'),
+  },
 ]
 
 const routesAsync = [...routesBasic].map((o) => o)
