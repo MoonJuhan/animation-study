@@ -45,7 +45,7 @@ export default {
           new mojs.Shape({
             parent: '#bouncyCircle',
             shape: 'circle',
-            fill: { '#F64040': '#FC46AD' },
+            fill: { '#d7e6fc': '#0058ff' },
             left: '50%',
             top: '50%',
             radius: { 20: 80 },
@@ -63,7 +63,7 @@ export default {
           new mojs.Shape({
             parent: '#spinner',
             shape: 'circle',
-            stroke: '#FC46AD',
+            stroke: '#d7e6fc',
             strokeDasharray: '125, 125',
             strokeDashoffset: { 0: '-125' },
             strokeWidth: 4,
@@ -92,18 +92,18 @@ export default {
             fill: '#d7e6fc',
             top: '50%',
             left: '50%',
-            scaleX: { 0.44: 0.50 },
+            scaleX: { 0.44: 0.5 },
             scaleY: { 0.44: 0.42 },
             duration: 220,
           })
             .then({
-              scaleX: { 0.50: 0.42 },
+              scaleX: { 0.5: 0.42 },
               scaleY: { 0.42: 0.44 },
               duration: 180,
             })
             .then({
               scaleX: { 0.42: 0.48 },
-              scaleY: { 0.44: 0.44},
+              scaleY: { 0.44: 0.44 },
               duration: 160,
             })
             .then({
