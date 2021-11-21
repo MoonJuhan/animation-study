@@ -1,21 +1,41 @@
 <template>
   <div class="view-mobile">
     <div class="background" />
+    <LockScreen @unlock="unlock" v-if="locked" />
     <div class="contents-wrapper">
       <div class="widget-wrapper"></div>
       <div class="icon-wrapper"></div>
-      <div class="under-bar">
+      <!-- <div class="under-bar">
         <div>ICON</div>
         <div>ICON</div>
         <div>ICON</div>
         <div>ICON</div>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+import { ref } from 'vue'
+import LockScreen from './LockScreen'
+
+export default {
+  components: {
+    LockScreen,
+  },
+  setup() {
+    const locked = ref(true)
+
+    const unlock = () => {
+      locked.value = false
+    }
+
+    return {
+      locked,
+      unlock,
+    }
+  },
+}
 </script>
 
 <style lang="scss" scoped>

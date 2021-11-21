@@ -21,7 +21,7 @@ const routesBasic = [
   },
   {
     path: '/mobile',
-    component: () => import(/* webpackChunkName: 'view-mobile' */ '../components/views/ViewMobile.vue'),
+    component: () => import(/* webpackChunkName: 'view-mobile' */ '../components/views/mobile-project/ViewMobile.vue'),
   },
 ]
 
