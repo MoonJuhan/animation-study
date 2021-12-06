@@ -1,51 +1,98 @@
 <template>
   <div class="lock-screen">
-    <i class="fas fa-fingerprint" @touchstart="onTouchStart" />
+    {{ count }}
 
-    <button @click="onClickTouch(false)">Touch End</button>
-    <button @click="onClickTouch(true)">Touch Start</button>
+    <button
+      :class="{ active: interval }"
+      @mousedown="start"
+      @mouseleave="stop"
+      @mouseup="stop"
+      @touchstart="start"
+      @touchend="stop"
+      @touchcancel="stop"
+    >
+      <i class="fas fa-fingerprint" />
+      <div id="progress-circle" />
+    </button>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import mojs from '@mojs/core'
+import { onMounted, ref } from 'vue'
 
 export default {
   setup(props, { emit }) {
-    const isClicked = ref(false)
+    const interval = ref(false)
+    const count = ref(0)
 
-    let timerFunc = null
+    const start = () => {
+      if (!interval.value) {
+        interval.value = setInterval(() => {
+          count.value++
 
-    const onTouchStart = () => {
-      isClicked.value = true
+          if (count.value === 1) {
+            progressCircle.value.play()
+          }
 
-      timerFunc = setTimeout(() => {
-        if (isClicked.value) {
-          emit('unlock')
-        }
-      }, 3000)
-    }
-
-    const onTouchEnd = () => {
-      isClicked.value = false
-
-      clearTimeout(timerFunc)
-    }
-
-    const onClickTouch = params => {
-      console.log(params)
-      if (params) {
-        onTouchStart()
-      } else {
-        onTouchEnd()
+          if (count.value > 30) {
+            emit('unlock')
+          }
+        }, 100)
       }
     }
 
+    const stop = () => {
+      clearInterval(interval.value)
+
+      progressCircle.value.setProgress(0)
+      count.value = 0
+      interval.value = false
+    }
+
+    const progressCircle = ref(null)
+
+    const setProgressCircle = () => {
+      progressCircle.value = new mojs.Shape({
+        parent: '#progress-circle',
+        shape: 'circle',
+        stroke: '#FC46AD',
+        strokeDasharray: '100%',
+        strokeDashoffset: '100%',
+        strokeWidth: 6,
+        fill: 'none',
+        left: '50%',
+        top: '50%',
+        rotate: '-90',
+        radius: 34,
+        onComplete(isForward, isYoyo) {
+          console.log('onComplete')
+          console.log(isForward, isYoyo)
+          //...
+        },
+        onRefresh(isBefore) {
+          console.log('onRefresh')
+          //...
+        },
+
+        onUpdate(ep, p, isForward, isYoyo) {
+          console.log('onUpdate')
+        },
+      }).then({
+        strokeDashoffset: '0%',
+        duration: 3000,
+      })
+    }
+
+    onMounted(() => {
+      setProgressCircle()
+    })
+
     return {
-      isClicked,
-      onTouchStart,
-      onTouchEnd,
-      onClickTouch,
+      start,
+      stop,
+      interval,
+      count,
     }
   },
 }
@@ -64,16 +111,22 @@ export default {
   flex-direction: column-reverse;
   align-items: center;
 
-  .fa-fingerprint {
+  button {
+    border: none;
+    background-color: transparent;
+    user-select: none;
     margin: 0 0 80px;
+    position: relative;
+  }
+
+  .fa-fingerprint {
     font-size: 40px;
     color: var(--gs-88);
     background-color: var(--white-20);
-    backdrop-filter: blur(6px);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     border: 1px solid var(--white-18);
     padding: 6px;
     border-radius: 50%;
+    user-select: none;
   }
 }
 </style>
