@@ -1,7 +1,5 @@
 <template>
   <div class="lock-screen">
-    {{ count }}
-
     <button
       :class="{ active: interval }"
       @mousedown="start"
@@ -12,13 +10,17 @@
       @touchcancel="stop"
     >
       <i class="fas fa-fingerprint" />
-      <div id="progress-circle" />
+      <div class="circle_progress_wrap">
+        <svg class="circle_progress" width="60" height="60" viewBox="0 0 60 60">
+          <circle class="frame" cx="30" cy="30" r="27" stroke-width="6" />
+          <circle class="bar" cx="30" cy="30" r="27" stroke-width="6" ref="refProgressCircle" />
+        </svg>
+      </div>
     </button>
   </div>
 </template>
 
 <script>
-import mojs from '@mojs/core'
 import { onMounted, ref } from 'vue'
 
 export default {
@@ -30,65 +32,46 @@ export default {
       if (!interval.value) {
         interval.value = setInterval(() => {
           count.value++
+          progress(count.value / 3)
 
-          if (count.value === 1) {
-            progressCircle.value.play()
-          }
-
-          if (count.value > 30) {
+          if (count.value > 300) {
             emit('unlock')
+            stop()
           }
-        }, 100)
+        }, 10)
       }
     }
 
     const stop = () => {
       clearInterval(interval.value)
-
-      progressCircle.value.setProgress(0)
+      progress(0)
       count.value = 0
       interval.value = false
     }
 
-    const progressCircle = ref(null)
+    const refProgressCircle = ref(null)
+    const RADIUS = 27
+    const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
-    const setProgressCircle = () => {
-      progressCircle.value = new mojs.Shape({
-        parent: '#progress-circle',
-        shape: 'circle',
-        stroke: '#FC46AD',
-        strokeDasharray: '100%',
-        strokeDashoffset: '100%',
-        strokeWidth: 6,
-        fill: 'none',
-        left: '50%',
-        top: '50%',
-        rotate: '-90',
-        radius: 34,
-        onComplete(isForward, isYoyo) {
-          console.log('onComplete')
-          console.log(isForward, isYoyo)
-          //...
-        },
-        onRefresh(isBefore) {
-          console.log('onRefresh')
-          //...
-        },
+    const progress = per => {
+      var progress = per / 100
+      var dashoffset = CIRCUMFERENCE * (1 - progress)
 
-        onUpdate(ep, p, isForward, isYoyo) {
-          console.log('onUpdate')
-        },
-      }).then({
-        strokeDashoffset: '0%',
-        duration: 3000,
-      })
+      refProgressCircle.value.style.strokeDashoffset = dashoffset
+    }
+
+    const initProgress = () => {
+      refProgressCircle.value.style.strokeDasharray = CIRCUMFERENCE
+
+      progress(0)
     }
 
     onMounted(() => {
-      setProgressCircle()
+      initProgress()
     })
 
     return {
+      refProgressCircle,
       start,
       stop,
       interval,
@@ -127,6 +110,39 @@ export default {
     padding: 6px;
     border-radius: 50%;
     user-select: none;
+  }
+
+  .circle_progress_wrap {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+  }
+  .circle_progress {
+    transform: rotate(-90deg);
+  }
+  .frame,
+  .bar {
+    fill: none;
+  }
+  .frame {
+    /* stroke: #e6e6e6; */
+  }
+  .bar {
+    stroke: #03c75a;
+    stroke-linecap: round;
+  }
+  .value {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    text-align: center;
+    color: #888;
+    font-size: 16px;
+    line-height: 120px;
   }
 }
 </style>
