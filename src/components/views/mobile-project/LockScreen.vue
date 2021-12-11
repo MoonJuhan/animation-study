@@ -1,5 +1,7 @@
 <template>
   <div class="lock-screen">
+    <LockScreenClock />
+
     <button
       :class="{ active: interval }"
       @mousedown="start"
@@ -21,9 +23,13 @@
 </template>
 
 <script>
+import LockScreenClock from './LockScreenClock'
 import { onMounted, ref } from 'vue'
 
 export default {
+  components: {
+    LockScreenClock,
+  },
   setup(props, { emit }) {
     const interval = ref(false)
     const count = ref(0)
@@ -91,8 +97,9 @@ export default {
   left: 0;
   right: 0;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 
   button {
     border: none;
